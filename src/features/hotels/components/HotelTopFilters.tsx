@@ -29,7 +29,7 @@ const StyledHotelsTopFilters = styled.div<HotelsTopFiltersProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.02);
   z-index: 2;
   background-color: var(--color-grey-0);
 `;
