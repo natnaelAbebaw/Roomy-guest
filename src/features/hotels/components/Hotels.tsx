@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import { Hotel, getHotels, searchHotels } from "../../../services/hotelApi";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import HotelShimmerEffect from "./HotelShimmerEffect";
 type HotelsBoxProps = {
   isSticky: boolean;
 };
@@ -65,7 +66,7 @@ function Hotels() {
         : searchHotels(searchQuery),
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <HotelShimmerEffect />;
   return (
     <HotelsBox isSticky={isSticky}>
       {hotels?.map((hotel) => (
