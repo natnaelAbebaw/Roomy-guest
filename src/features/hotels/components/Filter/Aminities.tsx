@@ -1,6 +1,7 @@
 import CheckBox from "../../../../ui/CheckBox";
 import FilterBox from "../../../../ui/FilterBox";
 import styled from "styled-components";
+import { Spacing } from "../../../../ui/cssConstants";
 
 const amenities = [
   "Free Wi-Fi",
@@ -24,8 +25,9 @@ const amenities = [
 const AminitiesBox = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(13rem, 1fr));
-  gap: 1rem;
+  gap: 2rem;
   margin-top: 3rem;
+
   & div {
     display: flex;
     gap: 0.5rem;
@@ -48,7 +50,7 @@ function Aminities({
 
       <AminitiesBox>
         {amenities.map((amenity) => (
-          <CheckBox key={amenity}>
+          <CheckBox size={25} gap={Spacing.s48} key={amenity}>
             <label htmlFor={amenity}>
               <input
                 type="checkbox"
