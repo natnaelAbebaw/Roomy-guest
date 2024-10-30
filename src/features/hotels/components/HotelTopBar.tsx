@@ -1,31 +1,34 @@
 import styled, { css } from "styled-components";
-import HotelsFilters from "./HotelsFilters";
+import HotelsFilters from "./hotelTags";
 import { CiFilter } from "react-icons/ci";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PiSortAscendingThin } from "react-icons/pi";
 
 import DropDown from "../../../ui/DropDown";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import Model from "../../../ui/Modal";
+import Filter from "./Filter/Filter";
+import { useSearchParams } from "react-router-dom";
 type HotelsTopFiltersProps = {
-  isSticky: boolean;
+  issticky: string | undefined;
 };
 
 const StyledHotelsTopFilters = styled.div<HotelsTopFiltersProps>`
-  padding: 1.6rem 10rem;
+  padding: 0 10rem;
   width: 100%;
   ${(props) =>
-    props.isSticky
+    props.issticky
       ? css`
           position: fixed;
-          top: 16rem;
+          top: 10rem;
         `
       : css`
           position: absolute;
           /* top: 50%; */
         `}
-  border-top: 1px solid var(--color-grey-300);
+  border-top: 1px solid var(--color-grey-100);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -36,10 +39,11 @@ const StyledHotelsTopFilters = styled.div<HotelsTopFiltersProps>`
 
 const StyledButton = styled.button`
   display: flex;
-  padding: 1rem 2rem;
+  padding: 1rem 1.6rem;
   background: none;
   border-radius: 5px;
   border: 1px solid var(--color-grey-300);
+  color: var(--color-grey-600);
   align-items: center;
   gap: 1rem;
   justify-content: center;
@@ -52,6 +56,7 @@ const RightButtons = styled.div`
 `;
 const DropDownBox = styled.div`
   border: 1px solid var(--color-grey-300);
+  color: var(--color-grey-600);
   display: flex;
   align-items: center;
   padding: 1rem 2rem;
@@ -61,33 +66,52 @@ const DropDownBox = styled.div`
 
 const dropDownList = [
   {
-    label: "Price",
-    value: "price",
+    label: "No sort",
+    value: "none",
   },
   {
     label: "Name",
     value: "name",
   },
   {
-    label: "Rating",
-    value: "rating",
+    label: "Rating average",
+    value: "-ratingAverage",
   },
 ];
 
 function HotelsTopFilters() {
   const { isSticky } = useSelector((state: RootState) => state.hotels);
+  const [searchParams, setSearchParms] = useSearchParams();
   const [selected, setSelected] = useState<{
     label: string;
     value: string | number;
   }>(dropDownList[0]);
+
+  useEffect(() => {
+    if (selected.value === "none") {
+      searchParams.delete("sort");
+    } else {
+      searchParams.set("sort", selected.value.toString());
+    }
+    setSearchParms(searchParams);
+  }, [searchParams, selected.value, setSearchParms]);
+
   return (
-    <StyledHotelsTopFilters isSticky={isSticky}>
+    <StyledHotelsTopFilters issticky={isSticky ? `${isSticky}` : undefined}>
       <HotelsFilters />
       <RightButtons>
-        <StyledButton>
-          <CiFilter fontSize={"24px"} />
-          Filter
-        </StyledButton>
+        <Model>
+          <Model.Open open="filter">
+            <StyledButton>
+              <CiFilter fontSize={"24px"} />
+              Filter
+            </StyledButton>
+          </Model.Open>
+          <Model.Window name="filter">
+            <Filter />
+          </Model.Window>
+        </Model>
+
         <DropDownBox>
           <PiSortAscendingThin fontSize={"24px"} />
           <span>SortBy:</span>
