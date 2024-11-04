@@ -15,6 +15,9 @@ const AuthContext = createContext<{
   setHotelAccount: (hotelAccount: HotelAccount | null) => void;
   hotel: Hotel | null;
   setHotel: (hotel: Hotel | null) => void;
+  darkMode: boolean;
+  toogleDarkMode: (darkMode: boolean) => void;
+  logout: () => void;
 }>({
   hotelAccount: null,
   login: () => {},
@@ -25,15 +28,19 @@ const AuthContext = createContext<{
   setHotelAccount: () => {},
   hotel: null,
   setHotel: () => {},
+  darkMode: false,
+  toogleDarkMode: () => {},
+  logout: () => {},
 });
 
 function AuthProvider() {
   const [hotelAccount, setHotelAccount] = useState<HotelAccount | null>(null);
-  // const [hotel, setHotel] = useState<HotelAccount | null>(null);
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
 
   const [token, setToken] = useState<string | null>(null);
+
+  const [darkMode, setDarkMode] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -58,6 +65,16 @@ function AuthProvider() {
     });
   }
 
+  function logout() {
+    localStorage.removeItem("accessToken");
+    navigate("/login");
+  }
+
+  function toogleDarkMode() {
+    setDarkMode(!darkMode);
+    document.documentElement.classList.toggle("dark-mode");
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -70,6 +87,9 @@ function AuthProvider() {
         isAuthenticated: localStorage.getItem("accessToken") !== null,
         hotel,
         setHotel,
+        darkMode,
+        toogleDarkMode,
+        logout,
       }}
     >
       <Outlet />
