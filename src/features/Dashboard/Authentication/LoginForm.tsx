@@ -42,7 +42,7 @@ const InputBox = styled(Flex)`
     transition: all 0.3s;
     padding: 0 3px;
     pointer-events: none;
-    background-color: ${Color.brand50};
+    background-color: ${Color.grey0};
   }
   svg {
     position: absolute;
@@ -59,7 +59,7 @@ const InputBox = styled(Flex)`
     border-radius: 6px;
     width: 100%;
     color: ${Color.grey700};
-    background-color: ${Color.brand50};
+    /* background-color: ${Color.grey50}; */
     &:focus {
       background-color: ${Color.grey0};
       border: 1.5px solid ${Color.brand500};
