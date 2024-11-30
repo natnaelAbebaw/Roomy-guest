@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import FilterBox from "../../../../ui/FilterBox";
-// import { useEffect, useState } from "react";
 import { GoDash } from "react-icons/go";
 import Slider from "rc-slider";
 
@@ -105,15 +104,11 @@ function PriceRange({
   selectedPriceRange,
   setSelectedPriceRange,
 }: PriceRangeProps) {
-  // const [min, setMin] = useState(minPrice);
-  // const [max, setMax] = useState(maxPrice);
-  const [min, max] = selectedPriceRange || [minPrice, maxPrice];
+  let [min, max] = [minPrice, maxPrice];
 
-  // useEffect(() => {
-  //   // setMin(minPrice);
-  //   // setMax(maxPrice);
-  //   setSelectedPriceRange
-  // }, [minPrice, maxPrice]);
+  if (selectedPriceRange[0] && selectedPriceRange[1]) {
+    [min, max] = selectedPriceRange;
+  }
 
   return (
     <FilterBox>

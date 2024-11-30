@@ -4,10 +4,10 @@ import styled from "styled-components";
 import { Color } from "../../../ui/cssConstants";
 
 const TopBar = styled.div`
-  padding: 2rem 10rem 0;
+  padding: 2rem 18rem 0;
   border-bottom: 1px solid ${Color.grey300};
   position: Fixed;
-  z-index: 10;
+  z-index: 3000;
   background-color: ${Color.grey0};
   width: 100%;
   top: 0;
@@ -42,9 +42,9 @@ function HotelDetailsTopBar({ sticktop }: { sticktop: boolean }) {
       {sticktop && (
         <TopBar>
           <Flex>
-            <Link href="#">Photos</Link>
-            <Link href="#">Aminities</Link>
-            <Link href="#">Location</Link>
+            <Link href="#hotel-image-gallery">Photos</Link>
+            <Link href="#Facilities">Aminities</Link>
+            <Link href="#review">Review</Link>
             <Link href="#">Map</Link>
           </Flex>
         </TopBar>

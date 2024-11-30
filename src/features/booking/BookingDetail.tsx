@@ -12,7 +12,7 @@ import {
 } from "../../services/BookingApi";
 import { dateDiffrence, formatDateMdy } from "../../utils/dateFormater";
 import Heading from "../../ui/Heading";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHotel } from "./useHotel";
 import Modal from "../../ui/Modal";
 import DeletePopup from "../../ui/DeletePopup";
@@ -34,10 +34,9 @@ const BookingStatusMapColor: Record<BookingStatus, Color> = {
 
 function BookingDetail({ booking }: { booking: Booking }) {
   // const { hotel: authHotel } = useAuth();
-  const [confirm, setConfirm] = useState(false);
 
   const navigate = useNavigate();
-  const [hasBreakfast, setHasBreakfast] = useState(false);
+  const [hasBreakfast] = useState(false);
   const { hotel } = useHotel(booking.hotel);
   const { DeleteBooking, isDeleteBookingLoading } = useDeleteBooking();
 
@@ -48,11 +47,6 @@ function BookingDetail({ booking }: { booking: Booking }) {
     });
   }
 
-  useEffect(() => {
-    if (booking.paymentStatus === PaymentStatus.PAID) {
-      setConfirm(true);
-    }
-  }, [booking.paymentStatus]);
   return (
     <Container padding={[Spacing.zero, Spacing.s96, Spacing.zero, Spacing.s32]}>
       <Container padding={[Spacing.s8, Spacing.zero]}>
@@ -130,17 +124,6 @@ function BookingDetail({ booking }: { booking: Booking }) {
                     email: string;
                   }
                 ).email
-              }
-            </Text>
-            <span>&#183;</span>
-            <Text>
-              National ID{" "}
-              {
-                (
-                  booking.guest as {
-                    nationalID: string;
-                  }
-                ).nationalID
               }
             </Text>
           </Flex>
@@ -267,14 +250,7 @@ function BookingDetail({ booking }: { booking: Booking }) {
             </Flex>
           </Container>
 
-          <Flex
-            justify={FlexJustify.End}
-            mb={
-              booking.status === BookingStatus.UNCONFIRMED
-                ? Spacing.s12
-                : Spacing.s32
-            }
-          >
+          <Flex justify={FlexJustify.End} mb={Spacing.s48}>
             <Text>Booked at {formatDateMdy(booking.createdAt)}</Text>
           </Flex>
         </Container>

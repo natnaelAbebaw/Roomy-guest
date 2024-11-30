@@ -1,25 +1,8 @@
 import { Shimmer } from "react-shimmer";
 import styled from "styled-components";
-
-const StyledHotelShimmerEffect = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-  column-gap: 2rem;
-  row-gap: 4rem;
-  padding: 3rem 10rem;
-`;
-
-function HotelShimmerEffect() {
-  return (
-    <StyledHotelShimmerEffect>
-      {new Array(12).fill(12).map((_, index) => (
-        <HotelShimmer key={index} />
-      ))}
-    </StyledHotelShimmerEffect>
-  );
-}
-
-export default HotelShimmerEffect;
+import Flex, { FlexJustify } from "../../../ui/Flex";
+import Container, { Length } from "../../../ui/Container";
+import { Spacing } from "../../../ui/cssConstants";
 
 type ShimmerProps = {
   height: number;
@@ -33,26 +16,21 @@ const StyledShimmerBox = styled(Shimmer)<ShimmerProps>`
   border-radius: ${(props) => props.br};
 `;
 StyledShimmerBox.defaultProps = {
-  mb: "1rem",
+  mb: Spacing.s4,
   br: "5px",
 };
 
-const FlexDiv = styled.div`
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-`;
-
 function HotelShimmer() {
   return (
-    <div>
-      <StyledShimmerBox height={250} width={300} mb={"2rem"} />
-      <FlexDiv>
-        <StyledShimmerBox height={30} width={200} mb="2rem" />
-        <StyledShimmerBox height={30} width={30} />
-      </FlexDiv>
-      <StyledShimmerBox height={20} width={230} mb="1rem" />
-      <StyledShimmerBox height={20} width={210} />
-    </div>
+    <Container maxWidth={Length.L30}>
+      <StyledShimmerBox height={270} width={300} mb={Spacing.s24} />
+      <Flex justify={FlexJustify.SpaceBetween}>
+        <StyledShimmerBox height={22} width={180} />
+        <StyledShimmerBox height={22} width={50} />
+      </Flex>
+      <StyledShimmerBox height={22} width={150} />
+      <StyledShimmerBox height={22} width={100} />
+    </Container>
   );
 }
+export default HotelShimmer;

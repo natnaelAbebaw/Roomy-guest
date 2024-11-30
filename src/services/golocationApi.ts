@@ -1,3 +1,5 @@
+import { baseUrl } from "../constant";
+
 type Location = {
   id: number;
   address: string;
@@ -6,7 +8,7 @@ type Location = {
 };
 
 export async function geocodeStartingWith(query: string) {
-  const url = `http://127.0.0.1:8000/api/v1/searchLocation?q="${query}"`;
+  const url = `${baseUrl}/searchLocation?q="${query}"`;
 
   try {
     const response = await fetch(url);

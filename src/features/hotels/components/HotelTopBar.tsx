@@ -1,39 +1,40 @@
 import styled, { css } from "styled-components";
 import HotelsFilters from "./hotelTags";
-import { CiFilter } from "react-icons/ci";
 import { useEffect, useState } from "react";
-
-import { PiSortAscendingThin } from "react-icons/pi";
-
-import DropDown from "../../../ui/DropDown";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
 import Model from "../../../ui/Modal";
 import Filter from "./Filter/Filter";
 import { useSearchParams } from "react-router-dom";
+import {
+  SearchFormActionType,
+  useGlobalContext,
+} from "../../../context/GlobalContext";
+import { Length } from "../../../ui/Container";
+import { IoOptionsOutline } from "react-icons/io5";
+import { Font } from "../../../ui/cssConstants";
+import Text, { FontWeight } from "../../../ui/Text";
 type HotelsTopFiltersProps = {
-  issticky: string | undefined;
+  searchFormState: SearchFormActionType | undefined;
 };
 
 const StyledHotelsTopFilters = styled.div<HotelsTopFiltersProps>`
-  padding: 0 10rem;
+  padding: 1rem 10rem;
   width: 100%;
   ${(props) =>
-    props.issticky
+    props.searchFormState === SearchFormActionType.stickyOnTop
       ? css`
           position: fixed;
-          top: 10rem;
+          top: 9rem;
+          box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+          padding: 0 10rem;
         `
       : css`
           position: absolute;
-          /* top: 50%; */
         `}
-  border-top: 1px solid var(--color-grey-100);
   display: flex;
+  border-top: 1.4px solid var(--color-grey-100);
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.02);
-  z-index: 2;
+  z-index: 4;
   background-color: var(--color-grey-0);
 `;
 
@@ -41,7 +42,7 @@ const StyledButton = styled.button`
   display: flex;
   padding: 1rem 1.6rem;
   background: none;
-  border-radius: 5px;
+  border-radius: 12px;
   border: 1px solid var(--color-grey-300);
   color: var(--color-grey-600);
   align-items: center;
@@ -53,15 +54,6 @@ const RightButtons = styled.div`
   display: flex;
   gap: 1rem;
   align-items: center;
-`;
-const DropDownBox = styled.div`
-  border: 1px solid var(--color-grey-300);
-  color: var(--color-grey-600);
-  display: flex;
-  align-items: center;
-  padding: 1rem 2rem;
-  gap: 1rem;
-  border-radius: 5px;
 `;
 
 const dropDownList = [
@@ -80,9 +72,9 @@ const dropDownList = [
 ];
 
 function HotelsTopFilters() {
-  const { isSticky } = useSelector((state: RootState) => state.hotels);
+  const { searchFormState } = useGlobalContext();
   const [searchParams, setSearchParms] = useSearchParams();
-  const [selected, setSelected] = useState<{
+  const [selected] = useState<{
     label: string;
     value: string | number;
   }>(dropDownList[0]);
@@ -97,22 +89,25 @@ function HotelsTopFilters() {
   }, [searchParams, selected.value, setSearchParms]);
 
   return (
-    <StyledHotelsTopFilters issticky={isSticky ? `${isSticky}` : undefined}>
+    <StyledHotelsTopFilters searchFormState={searchFormState}>
       <HotelsFilters />
       <RightButtons>
         <Model>
           <Model.Open open="filter">
             <StyledButton>
-              <CiFilter fontSize={"24px"} />
-              Filter
+              <IoOptionsOutline fontSize={Font.fs24} />
+              <Text fontWeight={FontWeight.Medium} fontSize={Font.fs14}>
+                {" "}
+                Filter
+              </Text>
             </StyledButton>
           </Model.Open>
-          <Model.Window name="filter">
+          <Model.Window maxHeight={Length.L68} name="filter">
             <Filter />
           </Model.Window>
         </Model>
 
-        <DropDownBox>
+        {/* <DropDownBox>
           <PiSortAscendingThin fontSize={"24px"} />
           <span>SortBy:</span>
           <DropDown
@@ -120,7 +115,7 @@ function HotelsTopFilters() {
             selected={selected}
             onSelected={setSelected}
           />
-        </DropDownBox>
+        </DropDownBox> */}
       </RightButtons>
     </StyledHotelsTopFilters>
   );

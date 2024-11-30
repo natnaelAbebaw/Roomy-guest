@@ -1,4 +1,4 @@
-export enum queryParams {
+export enum QueryParams {
   city = "city",
   country = "country",
   state = "state",

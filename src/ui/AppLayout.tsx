@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
+// import Footer from "./Footer";
 
 const StyledApp = styled.div`
-  height: 200vh;
+  min-height: 100vh;
 `;
 function AppLayout() {
   return (
     <StyledApp>
-      <Header />
       <Outlet />
+      {/* <Footer /> */}
     </StyledApp>
   );
 }

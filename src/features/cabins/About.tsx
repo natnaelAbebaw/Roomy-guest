@@ -1,6 +1,6 @@
 import Flex, { FlexAlign, FlexDirection } from "../../ui/Flex";
 import { Color, Font, Spacing } from "../../ui/cssConstants";
-import Heading, { HeadingElement } from "../../ui/Heading";
+import Heading from "../../ui/Heading";
 import EllipsisParagraph from "../../ui/EllipsisParagraph";
 import Modal from "../../ui/Modal";
 import Button, { ButtonType } from "../../ui/Button";
@@ -16,9 +16,6 @@ function About({
 }) {
   return (
     <Flex mb={Spacing.s24} gap={Spacing.s8} direction={FlexDirection.Column}>
-      <Heading fs={Font.fs16} mb={Spacing.zero} as={HeadingElement.H2}>
-        About the {title}
-      </Heading>
       <EllipsisParagraph>{description}</EllipsisParagraph>
 
       <Modal>

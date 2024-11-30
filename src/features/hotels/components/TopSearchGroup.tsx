@@ -1,81 +1,78 @@
 import { IoIosBed } from "react-icons/io";
 import { MdFlight, MdLocalTaxi } from "react-icons/md";
-import { useSelector } from "react-redux";
+
 import styled, { css } from "styled-components";
-import { RootState } from "../../../store";
+
+import {
+  SearchFormActionType,
+  useGlobalContext,
+} from "../../../context/GlobalContext";
+import Flex, { FlexAlign, FlexJustify } from "../../../ui/Flex";
+import Text from "../../../ui/Text";
+import Container, { Length } from "../../../ui/Container";
+import { Color, Font, Spacing } from "../../../ui/cssConstants";
 
 type SearchGroupProps = {
-  isSticky: boolean;
+  searchFormState: SearchFormActionType;
 };
 
 const SearchGroup = styled.div<SearchGroupProps>`
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--color-grey-300);
+
   ${(props) =>
-    props.isSticky
+    props.searchFormState === SearchFormActionType.stickyOnTop
       ? css`
           display: none;
         `
       : css`
           display: flex;
         `}
-`;
-
-const StyledUl = styled.ul`
-  width: min(50rem, 100%);
-  display: flex;
-  margin: 0 auto;
-  align-items: center;
-  justify-content: space-between;
-  height: 8rem;
+  ${({ searchFormState }) =>
+    searchFormState === SearchFormActionType.normal &&
+    css`
+      border-bottom: 1px solid var(--color-grey-300);
+    `}
   & li {
-    display: flex;
-    padding: 2rem;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    font-size: 1.8rem;
-    color: var(--color-grey-700);
-    height: 100%;
-    position: relative;
+    border-bottom: 2px solid ${Color.brand700};
+    list-style: none;
   }
-  & li:nth-child(2),
-  li:nth-child(3) {
-    display: none;
-  }
-  & li:nth-child(1)::after {
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 4px;
-    border-radius: 1.5px;
-    background-color: var(--color-brand-700);
-    bottom: 0;
+  & li:not(:first-child) {
+    visibility: hidden;
   }
 `;
 
 function TopSearchGroup() {
-  const { isSticky } = useSelector((state: RootState) => state.hotels);
-
+  const { searchFormState } = useGlobalContext();
   return (
-    <SearchGroup isSticky={isSticky}>
-      <StyledUl>
-        <li>
-          <IoIosBed />
-          <span>Hotels</span>
-        </li>
+    <SearchGroup searchFormState={searchFormState}>
+      <Flex
+        align={FlexAlign.Center}
+        justify={FlexJustify.Center}
+        gap={Spacing.s48}
+        width={Length.Full}
+      >
+        <Container as={"li"} padding={[Spacing.s24, Spacing.s8]}>
+          <Flex align={FlexAlign.Center}>
+            <IoIosBed color={Color.grey600} fontSize={Font.fs20} />
+            <Text fontSize={Font.fs18}>Hotels</Text>
+          </Flex>
+        </Container>
 
-        <li>
-          <MdFlight />
-          <span>Flights</span>
-        </li>
+        <Container as={"li"} padding={[Spacing.s24, Spacing.s8]}>
+          <Flex align={FlexAlign.Center}>
+            <MdFlight color={Color.grey600} fontSize={Font.fs20} />
+            <Text fontSize={Font.fs18}>Flights</Text>
+          </Flex>
+        </Container>
 
-        <li>
-          <MdLocalTaxi />
-          <span>Airport taxi</span>
-        </li>
-      </StyledUl>
+        <Container as={"li"} padding={[Spacing.s24, Spacing.s8]}>
+          <Flex align={FlexAlign.Center}>
+            <MdLocalTaxi color={Color.grey600} fontSize={Font.fs20} />
+            <Text fontSize={Font.fs18}>Airport taxi</Text>
+          </Flex>
+        </Container>
+      </Flex>
     </SearchGroup>
   );
 }

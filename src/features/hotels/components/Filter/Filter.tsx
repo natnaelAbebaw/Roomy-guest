@@ -1,4 +1,3 @@
-import { IoMdClose } from "react-icons/io";
 import styled from "styled-components";
 import "rc-slider/assets/index.css";
 import "./slider.css";
@@ -15,31 +14,27 @@ import {
 } from "../../../../services/hotelApi";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { queryParams } from "./queryParams";
+import { QueryParams } from "../queryParams";
+import Heading, { HeadingElement } from "../../../../ui/Heading";
+import Flex, { FlexAlign, FlexJustify } from "../../../../ui/Flex";
+import { Length } from "../../../../ui/Container";
+import { PulseLoader } from "react-spinners";
+import { Color } from "../../../../ui/cssConstants";
 const StyledFilter = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 1.4rem;
-  box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.2);
-  background-color: var(--color-grey-0);
-  & .topBar {
-    font-size: 2rem;
-    position: relative;
-    border-bottom: 1px solid var(--color-grey-300);
-    padding: 1rem;
-    text-align: center;
-    & > *:first-child {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 2rem;
-    }
+  & > h2 {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   & .bottomBar {
     display: flex;
     position: relative;
-    padding: 2rem 3rem;
+    padding: 1rem 4rem;
     gap: 1rem;
     border-top: 1px solid var(--color-grey-300);
     justify-content: space-between;
@@ -85,7 +80,7 @@ const Filters = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4rem;
-  height: 72vh;
+  height: 57rem;
   overflow-y: auto;
   & > div:not(:last-child) {
     padding: 2rem 0 4rem;
@@ -108,28 +103,31 @@ const PriceBar = styled.div<PriceBarProps>`
 function Filter({ close }: { close?: () => void }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRoomType, setSelectedRoomType] = useState<string>(
-    searchParams.get(queryParams.cabinTypes) || "Any type"
+    searchParams.get(QueryParams.cabinTypes) || "Any type"
   );
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>(
-    [
-      Number(searchParams.get(queryParams.minPriceRange)),
-      Number(searchParams.get(queryParams.maxPriceRange)),
-    ] || [0, 0]
+    searchParams.has(QueryParams.minPriceRange) &&
+      searchParams.has(QueryParams.maxPriceRange)
+      ? [
+          Number(searchParams.get(QueryParams.minPriceRange)),
+          Number(searchParams.get(QueryParams.maxPriceRange)),
+        ]
+      : [0, 0]
   );
 
   const [selectedRatingAverage, setSelectedRatingAverage] = useState<string>(
-    searchParams.get(queryParams.ratingAverage)
-      ? searchParams.get(queryParams.ratingAverage) + "+"
+    searchParams.get(QueryParams.ratingAverage)
+      ? searchParams.get(QueryParams.ratingAverage) + "+"
       : "Any"
   );
   const [selectedStarRating, setSelectedStarRating] = useState<string>(
-    searchParams.get(queryParams.starRating)
-      ? searchParams.get(queryParams.starRating) + "+"
+    searchParams.get(QueryParams.starRating)
+      ? searchParams.get(QueryParams.starRating) + "+"
       : "Any"
   );
   const [selectedBookingLength, setSelectedBookingLength] = useState<string>(
-    searchParams.get(queryParams.maxBookingLength)
-      ? searchParams.get(queryParams.maxBookingLength) + "+"
+    searchParams.get(QueryParams.maxBookingLength)
+      ? searchParams.get(QueryParams.maxBookingLength) + "+"
       : "Any"
   );
 
@@ -138,18 +136,18 @@ function Filter({ close }: { close?: () => void }) {
   const urlParmas = useMemo(() => {
     return {
       "cabinTypes[in]":
-        searchParams.get(queryParams.cabinTypes) || selectedRoomType,
+        searchParams.get(QueryParams.cabinTypes) || selectedRoomType,
       "priceRange.min[gte]": selectedPriceRange[0],
       "priceRange.max[lte]": selectedPriceRange[1],
       "ratingAverage[gte]": Number.parseInt(selectedRatingAverage),
       "starRating[gte]": Number.parseInt(selectedStarRating),
       "maxBookingLength[gte]": Number.parseInt(selectedBookingLength),
       "popularfacilities[all]": selectedPopularFacilties.join(","),
-      city: searchParams.get(queryParams.city) || "",
-      state: searchParams.get(queryParams.state) || "",
-      checkinDate: searchParams.get(queryParams.checkinDate) || "",
-      checkoutDate: searchParams.get(queryParams.checkoutDate) || "",
-      numGuests: searchParams.get(queryParams.numGuests) || "",
+      city: searchParams.get(QueryParams.city) || "",
+      country: searchParams.get(QueryParams.country) || "",
+      checkinDate: searchParams.get(QueryParams.checkinDate) || "",
+      checkoutDate: searchParams.get(QueryParams.checkoutDate) || "",
+      numGuests: searchParams.get(QueryParams.numGuests) || "",
     };
   }, [
     searchParams,
@@ -189,40 +187,49 @@ function Filter({ close }: { close?: () => void }) {
     return popularFacilities;
   }
 
-  const { data: hotelstats, isLoading } = useQuery<HotelStats>({
-    queryKey: [
-      "hotelStats",
-      selectedRoomType,
-      selectedPriceRange,
-      selectedRatingAverage,
-      selectedStarRating,
-      selectedBookingLength,
-      selectedPopularFacilties,
-    ],
-    queryFn: () => getHotelStats(urlParmas),
-    keepPreviousData: true,
-  });
+  const { data: hotelstats, isLoading: isHotelStatLoading } =
+    useQuery<HotelStats>({
+      queryKey: [
+        "hotelStats",
+        selectedRoomType,
+        selectedPriceRange,
+        selectedRatingAverage,
+        selectedStarRating,
+        selectedBookingLength,
+        selectedPopularFacilties,
+        urlParmas,
+      ],
+      queryFn: () => getHotelStats(urlParmas),
+      keepPreviousData: true,
+    });
 
-  const { data: pricesStats } = useQuery<PriceRangeType>({
-    queryKey: ["hotelPriceRanges", selectedRoomType],
-    queryFn: () => getHotelPriceRanges(selectedRoomType),
-    keepPreviousData: true,
-  });
-
-  useEffect(() => {
-    if (pricesStats) {
-      setSelectedPriceRange([pricesStats.minPrice, pricesStats.maxPrice]);
-    }
-  }, [pricesStats]);
+  const { data: pricesStats, isLoading: isPriceStatLoading } =
+    useQuery<PriceRangeType>({
+      queryKey: ["hotelPriceRanges", selectedRoomType],
+      queryFn: () => getHotelPriceRanges(selectedRoomType),
+      keepPreviousData: true,
+    });
 
   function reset() {
     if (!pricesStats) return;
+
     setSelectedRoomType("Any type");
     setSelectedPriceRange([pricesStats?.minPrice, pricesStats?.maxPrice]);
     setSelectedRatingAverage("Any");
     setSelectedStarRating("Any");
     setSelectedBookingLength("Any");
     setSelectedSelectedPopularFacilties([]);
+
+    searchParams.delete(QueryParams.city);
+
+    searchParams.delete(QueryParams.country);
+
+    searchParams.delete(QueryParams.checkinDate);
+
+    searchParams.delete(QueryParams.checkoutDate);
+
+    searchParams.delete(QueryParams.numGuests);
+    setSearchParams(searchParams);
   }
 
   function showFilterResults() {
@@ -251,12 +258,22 @@ function Filter({ close }: { close?: () => void }) {
     close?.();
   }
 
+  if (isHotelStatLoading) {
+    return (
+      <Flex
+        width={Length.Full}
+        height={Length.L68}
+        justify={FlexJustify.Center}
+        align={FlexAlign.Center}
+      >
+        <PulseLoader color={Color.brand700} />
+      </Flex>
+    );
+  }
+
   return (
     <StyledFilter>
-      <div className="topBar">
-        <IoMdClose onClick={close} />
-        <span>Filters</span>
-      </div>
+      <Heading as={HeadingElement.H2}>Filter</Heading>
       <Filters>
         <RoomTypeFilter
           selectedRoomType={selectedRoomType}
@@ -295,7 +312,7 @@ function Filter({ close }: { close?: () => void }) {
       </Filters>
       <div className="bottomBar">
         <button onClick={reset}>Clear All</button>
-        <button onClick={showFilterResults} disabled={isLoading}>
+        <button onClick={showFilterResults} disabled={isPriceStatLoading}>
           <span>Show</span>
           {hotelstats?.totalHotels ?? 0}
           <span>hotels</span>
