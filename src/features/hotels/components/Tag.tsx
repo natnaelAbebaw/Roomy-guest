@@ -4,10 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Color, Font } from "../../../ui/cssConstants";
 import Text, { FontWeight } from "../../../ui/Text";
-import {
-  SearchFormActionType,
-  useGlobalContext,
-} from "../../../context/GlobalContext";
+import { useGlobalContext } from "../../../context/GlobalContext";
 type TagProps = {
   id: number;
   icon: React.ReactElement;

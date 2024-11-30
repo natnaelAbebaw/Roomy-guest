@@ -3,11 +3,11 @@ import { Spacing } from "./cssConstants";
 import { Length, Position } from "./Container";
 
 type positionProps = {
-  top?: Spacing | Length;
-  left?: Spacing | Length;
-  right?: Spacing | Length;
-  bottom?: Spacing | Length;
-  transform?: [Spacing | Length, Spacing | Length];
+  top?: Spacing | Length | string;
+  left?: Spacing | Length | string;
+  right?: Spacing | Length | string;
+  bottom?: Spacing | Length | string;
+  transform?: [Spacing | Length | string, Spacing | Length | string];
   zIndex?: number;
   position?: Position;
 };
@@ -38,11 +38,11 @@ function Positioned({
   position,
 }: {
   children: React.ReactNode;
-  top?: Spacing | Length;
-  left?: Spacing | Length;
-  right?: Spacing | Length;
-  bottom?: Spacing | Length;
-  transform?: [Spacing | Length, Spacing | Length];
+  top?: Spacing | Length | string;
+  left?: Spacing | Length | string;
+  right?: Spacing | Length | string;
+  bottom?: Spacing | Length | string;
+  transform?: [Spacing | Length | string, Spacing | Length | string];
   zIndex?: number;
   position?: Position;
 }) {

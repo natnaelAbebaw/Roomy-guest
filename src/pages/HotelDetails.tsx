@@ -583,7 +583,6 @@ function HotelDetails() {
                         <CabinDetails
                           key={i}
                           cabinId={cabin.availableCabins[0]}
-                          cabin={cabin}
                           hotelId={hotelId!}
                           startDate={startDate.toISOString()}
                           endDate={endDate.toISOString()}
